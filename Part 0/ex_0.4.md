@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram 
     participant browser
     participant server
@@ -7,9 +8,8 @@ sequenceDiagram
     server-->>browser: GET /exampleapp/notes
     deactivate server
 
-    Browser reloads Notes page 
-    activate server 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
     server-->>browser: main.css style sheet 
     deactivate server
 
@@ -22,5 +22,4 @@ sequenceDiagram
     activate server
     server-->>browser: [{ content: 'new', date: '2024-05-25T20:01:14.504Z'}, ... ]
     deactivate server
-
-
+```
