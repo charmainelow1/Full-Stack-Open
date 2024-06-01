@@ -1,6 +1,48 @@
 import { useState, useEffect } from 'react'
 import phonebookService from './phonebook.js'
 
+const SuccessNotification = ({ message }) => {
+  const notificationStyle= {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: '20px',
+    borderStyle: 'solid',
+    borderRadius: '5px',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+
+  if (message === null) 
+    return null 
+
+  return (
+    <div style={notificationStyle}>
+      {message}
+    </div>
+  )
+}
+
+const ErrorNotification = ({ errorMessage }) => {
+  const notificationStyle= {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: '20px',
+    borderStyle: 'solid',
+    borderRadius: '5px',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+
+  if (errorMessage === null) 
+    return null 
+
+  return (
+    <div style={notificationStyle}>
+      {errorMessage}
+    </div>
+  )
+}
+
 const Filter = ({ handleFilterChange }) => {
   return (
     <div>
@@ -42,6 +84,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState(0)
   const [newFilter, setNewFilter] = useState('')
+  const [newMessage, setNewMessage] = useState(null)
+  const [newError, setNewError] = useState(null)
 
   useEffect(() => {
     phonebookService
@@ -66,6 +110,16 @@ const App = () => {
           .update(updatedPerson.id, updatedPerson)
           .then( response => {
             setPersons(persons.map(person => person.id !== updatedPerson.id ? person : response))
+            setNewMessage(`Changed ${newName}'s number`)
+            setTimeout(() => {
+              setNewMessage(null)
+            }, 5000)
+          })
+          .catch(error => {
+            setNewError(`Information of ${newName} has already been removed from server`)
+            setTimeout(() => {
+              setNewError(null)
+            }, 5000)
           })
       }
     } else {
@@ -78,6 +132,10 @@ const App = () => {
           .create(personObject)
           .then(response => {
             setPersons(persons.concat(response))
+            setNewMessage(`Added ${newName}`)
+            setTimeout(() => {
+              setNewMessage(null)
+            }, 5000)
           })
     }
   }
@@ -96,6 +154,9 @@ const App = () => {
 
   return (
     <div>
+      <SuccessNotification message={newMessage}/>
+      <ErrorNotification errorMessage={newError}/>
+
       <h2>Phonebook</h2>
       <Filter handleFilterChange={handleFilterChange}/>
 
