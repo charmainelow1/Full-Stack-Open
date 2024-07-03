@@ -115,7 +115,7 @@ const App = () => {
               setNewMessage(null)
             }, 5000)
           })
-          .catch(error => {
+          .catch( () => {
             setNewError(`Information of ${newName} has already been removed from server`)
             setTimeout(() => {
               setNewError(null)
@@ -137,6 +137,12 @@ const App = () => {
               setNewMessage(null)
             }, 5000)
           })
+          .catch(error => {
+            setNewError(error.response.data.error)
+            setTimeout(() => {
+              setNewError(null)
+            }, 5000)
+          })
     }
   }
 
@@ -144,7 +150,7 @@ const App = () => {
     if (window.confirm(`Delete ${personToRemove.name}`)) {
       phonebookService
       .remove(personToRemove.id)
-      .then(response => {
+      .then( () => {
         setPersons(
           persons.filter(person => person.id !== personToRemove.id)
         )
